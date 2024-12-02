@@ -21,11 +21,14 @@ def parse_bab(fn: str, odict):
         s = sb.decode('cp1252')  # utf-8 doesn't work because of german umlaute !
         buf = io.StringIO(s)
         for line in buf:
-            match = re.search(r'(\w+)\s*[=]\s*(\d+)', line)
+            match = re.search(r'(\w+)\s*[=]\s*([\d,]+)[;]', line)
             if match:
                 identifier = match.group(1)
                 value = match.group(2)
-                odict[identifier] = int(value)
+                if re.fullmatch(r'\d+', value):
+                    odict[identifier] = int(value)
+                else:
+                    odict[identifier] = value
 
 
 def get_babitems(indir):

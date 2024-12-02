@@ -5,22 +5,30 @@ from time import time
 version = 'Rainis tool, v1.00, 01-12-2024'
 
 def check_babitems(babitems, xlsitems, outfn):
-    counts = {'ok': 0, 'value_mismatch': 0, 'type_mismatch': 0, 'key_not_found_error': 0}
+    counts = {'ok int': 0, 'ok str': 0, 'value_mismatch': 0, 'type_mismatch': 0, 'key_not_found_error': 0}
     with open(outfn, 'w') as f:
         for identifier, value in babitems.items():
             if identifier in xlsitems:
-                if isinstance(xlsitems[identifier], int):
+                if isinstance(value, int) and isinstance(xlsitems[identifier], int):
                     if xlsitems[identifier] == value:
-                        counts['ok'] += 1
+                        counts['ok int'] += 1
+                        f.write(f'ok int {identifier}, value={value}\n')
                     else:
                         counts['value_mismatch'] += 1
-                        f.write(f'value mismatch on "{identifier}": bab={value}, xls={xlsitems[identifier]}\n')
+                        f.write(f'int value mismatch on "{identifier}": bab={value}, xls={xlsitems[identifier]}\n')
+                elif isinstance(value, str) and isinstance(xlsitems[identifier], str):
+                    if xlsitems[identifier] == value:
+                        counts['ok str'] += 1
+                        f.write(f'ok str {identifier}, value="{value}"\n')
+                    else:
+                        counts['value_mismatch'] += 1
+                        f.write(f'str value mismatch on "{identifier}": bab={value}, xls={xlsitems[identifier]}\n')
                 else:
                     counts['type_mismatch'] += 1
                     f.write(f'type mismatch on "{identifier}": bab={value}, xls={xlsitems[identifier]}\n')
             else:
                 counts['key_not_found_error'] += 1
-                f.write(f'key not found in xls mismatch: "{identifier}"\n')
+                f.write(f'key not found in xls error: "{identifier}"\n')
         f.close()
     return counts
 

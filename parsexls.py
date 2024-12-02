@@ -17,7 +17,7 @@ def is_sheet_relevant(sheet, sheetname):
 def parse_sheet(sheet, odict, sheetname):
     for index, row in sheet.iterrows():
         related_component = str(row['Related Component']).upper()
-        if related_component in ['OBCU_ATP', 'SYSTEM']:
+        if related_component in ['OBCU_ATP']:
             identifier = row['Parameter Name']
             value = str(row['Project Value'])
             match = re.fullmatch(r'\d+', value)
